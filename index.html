@@ -1,0 +1,45 @@
+from crewai import Agent, Task, Crew
+
+# 1. Define the SEO Specialist Agent
+seo_agent = Agent(
+    role='Senior SEO Strategist',
+    goal='Identify low-hanging keyword opportunities from competitor data.',
+    backstory='An expert in search intent who finds gaps chatbots and search engines ignore.',
+    verbose=True
+)
+
+# 2. Define the Content Creator Agent
+writer_agent = Agent(
+    role='Brand Copywriter',
+    goal='Draft high-converting blog content based on targeted keywords.',
+    backstory='A writer skilled at adopting distinct brand voices without sounding robotic.',
+    verbose=True
+)
+
+# 3. Establish the sequential tasks
+task1 = Task(
+    description='Analyze the keyword profile for target_url and find 3 content gaps.',
+    expected_output='A markdown list of 3 high-intent keywords.',
+    agent=seo_agent
+)
+
+task2 = Task(
+    description='Take the 3 keywords and draft a comprehensive blog post outline for each.',
+    expected_output='Three structured blog post drafts saved as drafts.',
+    agent=writer_agent
+)
+
+# 4. Assemble the Crew
+cmo_crew = Crew(
+    agents=[seo_agent, writer_agent],
+    tasks=[task1, task2]
+)
+
+# 5. Kickoff the process when the script is run directly
+if __name__ == '__main__':
+    print("Starting the AI CMO Crew...")
+    result = cmo_crew.kickoff(inputs={'target_url': 'https://example.com'})
+    print("\n######################")
+    print("## FINAL OUTPUT     ##")
+    print("######################\n")
+    print(result)
